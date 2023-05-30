@@ -11,16 +11,59 @@ const avgP = avgDiv.querySelector('p');
 const maxDiv = document.querySelector('.max');
 const maxH1 = maxDiv.querySelector('h1');
 const maxP = maxDiv.querySelector('p');
+const configForm = document.querySelector('#config-form');
+const formContainer = document.querySelector('.form-container');
+
+
+let breakPoint1 = localStorage.getItem('breakPoint1') || 5;
+let breakPoint2 = localStorage.getItem('breakPoint2') || 10;
+
+
+configForm.addEventListener('submit',(event) => {
+  event.preventDefault(); 
+  breakPoint1 = document.querySelector('#break-point1').value || 5;
+  breakPoint2 = document.querySelector('#break-point2').value || 10;
+  
+  localStorage.setItem('breakPoint1', breakPoint1);
+  localStorage.setItem('breakPoint2', breakPoint2);
+
+  configForm.classList.add('hidden');
+  return false;
+});
+
+
+
+
+document.getElementById('setConfig').addEventListener('click', () => {
+  formContainer.classList.toggle('hidden');
+});
+
+
+// Set timeout to trigger at the start of the next hour
+setTimeout(() => {
+  // Update the price every hour
+  setInterval(() => {
+    getPrices().then((prices) => {
+      const now = new Date();
+      const price = getPriceForDate(now, prices['prices']);
+      const hoursNow = now.getHours();
+      leftHeader.innerHTML = `<h1>${hoursNow}:00 - ${hoursNow+1}:00 ${price} snt/kWh</h1>`;
+      setColor(leftHeader, price);
+    });
+  }, 1000 * 60 * 60);
+}, (60 - new Date().getMinutes()) * 60 * 1000);
+
 
 
 function setColor(element, price){
+  
   element.classList.remove('red');
   element.classList.remove('yellow');
   element.classList.remove('green');
-  if(price > 10){
+  if(price > breakPoint2){
     element.classList.add('red');
   }
-  else if(price > 5){
+  else if(price > breakPoint1){
     element.classList.add('yellow');
   }
   else {
@@ -50,6 +93,7 @@ getPrices().then((prices) => {
   setAvg(prices['prices']);
   setMax(prices['prices']);
   buildChart(prices['prices']);
+
 });
 
 
@@ -65,10 +109,10 @@ function buildChart(prices){
   });
   const yValues = prices.slice(0).reverse().filter(checkIfToday).map((price) => price.price);
   const barColors = prices.slice(0).reverse().filter(checkIfToday).map((price) => {
-    if(price.price > 10){
+    if(price.price > breakPoint2){
       return 'red';
     }
-    else if(price.price > 5){
+    else if(price.price > breakPoint1){
       return 'yellow';
     }
     else {

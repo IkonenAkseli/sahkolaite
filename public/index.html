@@ -23,10 +23,22 @@
     <div>Hello there!</div>
     <div class="chart-container">
         <canvas id="priceChart" style="width:100%; height: 500px;"></canvas>
-        
+    </div>
+    <div class="config-container">
+        <button id="setConfig">Aseta hintarajat</button>
     </div>
     
-
+    
+    <div class="form-container hidden">
+        <form id="config-form">
+            <label for="break-point1">Korkein vihreällä näytettävä hinta:</label>
+            <input id="break-point1" type="number" value="5">
+            <label for="break-point2">Korkein keltaisella näytettävä hinta:</label>
+            <input id="break-point2" type="number" value="10">
+            <input type="submit" value="Tallenna muutokset">
+        </form>
+    </div>
+    
     
 </body>
 </html>

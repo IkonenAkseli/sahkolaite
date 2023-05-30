@@ -6,6 +6,7 @@ const axios = require('axios');
 const cors = require('cors');
 
 let stashedPrices = null;
+let stashedPricesTimestamp = null;
 
 const now = new Date();
 now.setHours(now.getHours() + 12);
@@ -30,16 +31,23 @@ app.get('/prices', (req, res) => {
 
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`App listening at http://localhost:${port}`);
 });
 
 
 async function getPrices() {
     if (stashedPrices) {
-        return stashedPrices;
+        const now = new Date();
+        now.setHours(now.getHours() + 12);
+        if (stashedPricesTimestamp < now) {
+            console.log("Returning stashed prices");
+            return stashedPrices;
+        }
+
     };
     const prices = await axios.get('https://api.porssisahko.net/v1/latest-prices.json');
     stashedPrices = prices.data;
+    stashedPricesTimestamp = new Date();
     console.log("Stashed prices");
     return prices.data;
 };

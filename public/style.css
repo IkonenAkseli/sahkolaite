@@ -63,3 +63,7 @@ body {
 .red {
     background: radial-gradient(#f36744, #db0808);
 }
+
+.hidden {
+    display: none;
+}
