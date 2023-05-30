@@ -2,6 +2,11 @@ body {
     background-color: aquamarine;
 }
 
+html {
+    scroll-behavior: smooth;
+    
+  }
+
 .header {
     display: flex;
     align-items: center;
@@ -31,6 +36,17 @@ body {
     margin: 20px;
     background-color: whitesmoke;
     min-width: 550px;
+}
+
+@media only screen and (max-width: 600px) {
+    .header-left {
+        min-width: 0px;
+    }
+    .header-right {
+        min-width: 0px;
+        margin-right: -20px;
+        margin-left: -20px;
+    }
 }
 
 .top-info {

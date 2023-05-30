@@ -1,6 +1,7 @@
 
 
 
+
 const leftHeader = document.querySelector('.header-left');
 const smallestDiv = document.querySelector('.smallest');
 const smallestH1 = smallestDiv.querySelector('h1');
@@ -13,6 +14,7 @@ const maxH1 = maxDiv.querySelector('h1');
 const maxP = maxDiv.querySelector('p');
 const configForm = document.querySelector('#config-form');
 const formContainer = document.querySelector('.form-container');
+const configButton = document.querySelector('#setConfig');
 
 
 let breakPoint1 = localStorage.getItem('breakPoint1') || 5;
@@ -35,8 +37,12 @@ configForm.addEventListener('submit',(event) => {
 
 
 
-document.getElementById('setConfig').addEventListener('click', () => {
+configButton.addEventListener('click', () => {
   formContainer.classList.toggle('hidden');
+  setTimeout(() => {
+    formContainer.scrollIntoView();
+  }, 100);
+  
 });
 
 
