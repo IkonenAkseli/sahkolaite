@@ -21,8 +21,30 @@ body {
 .header-right {
     display: flex;
     width: 50%;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 25px;
+    border: 2px solid black;
+    margin: 20px;
+    background-color: whitesmoke;
+}
+
+.top-info {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
     
 }
+
+.top-price {
+    font-size: large;
+    text-align: center;
+}
+
 
 .green {
     background: radial-gradient(#67f344, #19db08);
