@@ -7,6 +7,10 @@ const cors = require('cors');
 
 let stashedPrices = null;
 
+const now = new Date();
+now.setHours(now.getHours() + 12);
+console.log(now);
+
 app.use(cors({
     origin: '*'
 }));

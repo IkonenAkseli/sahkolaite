@@ -5,28 +5,32 @@ body {
 .header {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
     
 }
 
 .header-left {
     display: flex;
-    width: 50%;
+    width:max-content;
     align-items: center;
     justify-content: center;
     border-radius: 25px;
     border: 2px solid black;
     margin: 20px;
+    min-width: 550px;
 }
 
 .header-right {
     display: flex;
-    width: 50%;
+    width: auto;
     align-items: center;
     justify-content: space-around;
     border-radius: 25px;
     border: 2px solid black;
     margin: 20px;
     background-color: whitesmoke;
+    min-width: 550px;
 }
 
 .top-info {
@@ -38,11 +42,13 @@ body {
     justify-content: center;
     border-radius: 25px;
     
+    
 }
 
 .top-price {
     font-size: large;
     text-align: center;
+    margin-top: -10px;
 }
 
 
