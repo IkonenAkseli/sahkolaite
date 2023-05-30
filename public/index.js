@@ -27,7 +27,8 @@ configForm.addEventListener('submit',(event) => {
   localStorage.setItem('breakPoint1', breakPoint1);
   localStorage.setItem('breakPoint2', breakPoint2);
 
-  formContainer.classList.toggle('hidden');
+  formContainer.classList.add('hidden');
+  refreshPrices();
   return false;
 });
 
@@ -43,15 +44,19 @@ document.getElementById('setConfig').addEventListener('click', () => {
 setTimeout(() => {
   // Update the price every hour
   setInterval(() => {
+    const now = new Date();
+    if(now.getHours() == 0){
+      refreshPrices();
+    }
     getPrices().then((prices) => {
-      const now = new Date();
+      
       const price = getPriceForDate(now, prices['prices']);
       const hoursNow = now.getHours();
       leftHeader.innerHTML = `<h1>${hoursNow}:00 - ${hoursNow+1}:00 ${price} snt/kWh</h1>`;
       setColor(leftHeader, price);
     });
   }, 1000 * 60 * 60);
-}, (60 - new Date().getMinutes()) * 60 * 1000);
+}, (60 * 60 * 1000 - new Date().getMinutes()) * 60 * 1000);
 
 
 
@@ -97,7 +102,19 @@ getPrices().then((prices) => {
 });
 
 
-
+function refreshPrices(){
+  getPrices().then((prices) => {
+    const now = new Date();
+    const price = getPriceForDate(now, prices['prices']);
+    const hoursNow = now.getHours();
+    leftHeader.innerHTML = `<h1>${hoursNow}:00 - ${hoursNow+1}:00 ${price} snt/kWh</h1>`;
+    setColor(leftHeader, price);
+    setSmallest(prices['prices']);
+    setAvg(prices['prices']);
+    setMax(prices['prices']);
+    buildChart(prices['prices']);
+  });
+}
 
 
 function buildChart(prices){
@@ -175,7 +192,7 @@ function setSmallest(prices){
 
 
 async function getPrices(){
-  return fetch('http://localhost:3000/prices').then((response) => {
+  return fetch('/api/prices').then((response) => {
     return response.json();
   });
 }

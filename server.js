@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const path = require('path');
 const axios = require('axios');
 const cors = require('cors');
@@ -23,8 +23,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-app.get('/prices', (req, res) => {
-    getPrices().then((prices) => {
+app.get('/api/prices', (req, res) => {
+    getPrices().catch((e) =>{
+        res.status(500).send(e);
+    }).then((prices) => {
         res.send(prices);
     });
 });
