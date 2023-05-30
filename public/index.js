@@ -27,7 +27,7 @@ configForm.addEventListener('submit',(event) => {
   localStorage.setItem('breakPoint1', breakPoint1);
   localStorage.setItem('breakPoint2', breakPoint2);
 
-  configForm.classList.add('hidden');
+  formContainer.classList.toggle('hidden');
   return false;
 });
 
