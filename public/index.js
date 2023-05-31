@@ -48,22 +48,30 @@ configButton.addEventListener('click', () => {
 
 // Set timeout to trigger at the start of the next hour
 setTimeout(() => {
+  refreshCurrentPrice();
   // Update the price every hour
   setInterval(() => {
+    console.log("Updating prices");
     const now = new Date();
     if(now.getHours() == 0){
       refreshPrices();
     }
-    getPrices().then((prices) => {
-      
-      const price = getPriceForDate(now, prices['prices']);
-      const hoursNow = now.getHours();
-      leftHeader.innerHTML = `<h1>${hoursNow}:00 - ${hoursNow+1}:00 ${price} snt/kWh</h1>`;
-      setColor(leftHeader, price);
-    });
+    else {
+      refreshCurrentPrice();
+    }
   }, 1000 * 60 * 60);
-}, (60 * 60 * 1000 - new Date().getMinutes()) * 60 * 1000);
+}, (60 - new Date().getMinutes()) * 60 * 1000);
 
+
+function refreshCurrentPrice(){
+  getPrices().then((prices) => {
+    const now = new Date();
+    const price = getPriceForDate(now, prices['prices']);
+    const hoursNow = now.getHours();
+    leftHeader.innerHTML = `<h1>${hoursNow}:00 - ${hoursNow+1}:00 ${price} snt/kWh</h1>`;
+    setColor(leftHeader, price);
+  });
+}
 
 
 function setColor(element, price){
