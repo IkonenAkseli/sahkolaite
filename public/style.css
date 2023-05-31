@@ -17,49 +17,35 @@ html {
 
 .header-left {
     display: flex;
-    width:max-content;
+    width: 45%;
     align-items: center;
     justify-content: space-around;
     border-radius: 25px;
     border: 2px solid black;
     margin: 20px;
-    min-width: 550px;
+    min-width: 400px;
 }
 
 .header-right {
     display: flex;
-    width: auto;
-    align-items: center;
+    width: 45%;
+    align-items: stretch;
     justify-content: space-around;
     border-radius: 25px;
     border: 2px solid black;
     margin: 20px;
     background-color: whitesmoke;
-    min-width: 550px;
+    min-width: 400px;
 }
 
-@media only screen and (max-width: 600px) {
-    .header-left {
-        min-width: 0px;
-        flex-direction: column;
-        width: 100%;
-        margin: 0px;
-    }
-    .header-right {
-        min-width: 0px;
-        margin-right: -20px;
-        margin-left: -20px;
-        width: 100%;
-    }
-    .top-info {
-        width: 25%;
-    }
-    .h1-left {
-        margin: 5px;
-    }
-        
-    
+.top-price {
+    font-size: large;
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 5px;
 }
+
+
 
 .top-info {
     margin-left: auto;
@@ -69,15 +55,14 @@ html {
     align-items: center;
     justify-content: center;
     border-radius: 25px;
+    flex: 1;
+    
     
     
 }
 
-.top-price {
-    font-size: large;
-    text-align: center;
-    margin-top: -10px;
-}
+
+
 
 
 .green {
@@ -149,4 +134,72 @@ button {
     font-size: large;
     width: 200px;
     height: 50px;
+}
+
+.desc-right {
+    text-align: center;
+    margin-top: 15px;
+}
+
+@media only screen and (max-width: 1000px) {
+    .header-left {
+        min-width: 0px;
+        width: 50%;
+        margin: 0px;
+        margin-left: -20px;
+    }
+    .header-right {
+        min-width: 0px;
+        margin-right: -20px;
+        margin-left: -20px;
+        width: 50%;
+    }
+    .top-info {
+        width: 25%;
+    }
+    .h1-left {
+        margin: 5px;
+        text-align: center;
+    }
+    
+    .desc-right {
+        margin: 5px;
+        font-size: 20px;
+    }    
+    
+    .top-price {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .header-left {
+        min-width: 0px;
+        flex-direction: column;
+        width: 100%;
+        margin: 0px;
+    }
+    .header-right {
+        min-width: 0px;
+        margin-right: -20px;
+        margin-left: -20px;
+        width: 100%;
+    }
+    .top-info {
+        width: 25%;
+    }
+    .h1-left {
+        margin: 5px;
+    }
+        
+    .desc-right {
+        margin: 5px;
+    }
+
+    .top-price {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }    
+    
 }
