@@ -15,6 +15,8 @@ const maxP = maxDiv.querySelector('p');
 const configForm = document.querySelector('#config-form');
 const formContainer = document.querySelector('.form-container');
 const configButton = document.querySelector('#setConfig');
+let stashedPrices = null;
+let stashedPricesTimestamp = null;
 
 
 let breakPoint1 = localStorage.getItem('breakPoint1') || 5;
@@ -135,7 +137,7 @@ function buildChart(prices){
 
   const xValues = prices.slice(0).reverse().filter(checkIfToday).map((price) => {
     const date = new Date(price.startDate);
-    console.log(date);
+    //console.log(date);
     return `${date.getHours()}:00`;
   });
   const yValues = prices.slice(0).reverse().filter(checkIfToday).map((price) => price.price);
@@ -180,7 +182,7 @@ function buildChart(prices){
 
 function setMax(prices){
   const max = prices.filter(checkIfToday).reduce((prev, current) => (prev.price > current.price) ? prev : current);
-  console.log(max);
+  //console.log(max);
   maxH1.innerHTML = `${new Date(max.startDate).getHours()}:00 - ${new Date(max.endDate).getHours()}:00`;
   maxP.innerHTML = `${max.price} snt/kWh`;
   setColor(maxDiv, max.price);
@@ -189,7 +191,7 @@ function setMax(prices){
 
 function setAvg(prices){
   const avg = prices.filter(checkIfToday).reduce((prev, current) => prev + current.price, 0) / prices.length;
-  console.log(avg);
+  //console.log(avg);
   avgH1.innerHTML = 'Keskiarvo';
   avgP.innerHTML = `${avg.toFixed(3)} snt/kWh`;
   setColor(avgDiv, avg);
@@ -198,7 +200,7 @@ function setAvg(prices){
 
 function setSmallest(prices){
   const smallest = prices.filter(checkIfToday).reduce((prev, current) => (prev.price < current.price) ? prev : current);
-  console.log(smallest);
+  //console.log(smallest);
   smallestH1.innerHTML = `${new Date(smallest.startDate).getHours()}:00 - ${new Date(smallest.endDate).getHours()}:00`;
   smallestP.innerHTML = `${smallest.price} snt/kWh`;
   setColor(smallestDiv, smallest.price);
@@ -206,14 +208,25 @@ function setSmallest(prices){
 
 
 async function getPrices(){
+  if (stashedPricesTimestamp){
+    const now = new Date();
+    now.setHours(now.getHours() + 12);
+    if (stashedPricesTimestamp < now) {
+      console.log("Returning stashed prices");
+      return stashedPrices;
+    }
+  }
   return fetch('/api/prices').then((response) => {
-    return response.json();
+    
+    stashedPrices = response.json();
+    stashedPricesTimestamp = new Date();
+    return stashedPrices;
   });
 }
 
 
 function getPriceForDate(date, prices) {
-  console.log(prices)
+  //console.log(prices)
   const matchingPriceEntry = prices.find(
     (price) => new Date(price.startDate) <= date && new Date(price.endDate) > date
   );
@@ -221,7 +234,7 @@ function getPriceForDate(date, prices) {
   if (!matchingPriceEntry) {
     throw 'Price for the requested date is missing';
   }
-  console.log(matchingPriceEntry);
+  //console.log(matchingPriceEntry);
 
   return matchingPriceEntry.price;
 }
