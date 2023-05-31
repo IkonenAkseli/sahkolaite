@@ -27,15 +27,18 @@ configForm.addEventListener('submit',(event) => {
   event.preventDefault(); 
   breakPoint1 = document.querySelector('#break-point1').value || 5;
   breakPoint2 = document.querySelector('#break-point2').value || 10;
+  startHour = document.querySelector('#start-hour').value || 0;
   
   localStorage.setItem('breakPoint1', breakPoint1);
   localStorage.setItem('breakPoint2', breakPoint2);
+  localStorage.setItem('startHour', startHour);
 
   avgDiv.scrollIntoView();
 
   setTimeout(() => {
     formContainer.classList.add('hidden');
   }, 300);
+  toggleDisabled();
 
   
   refreshPrices();
@@ -53,9 +56,11 @@ configButton.addEventListener('click', () => {
       formContainer.scrollIntoView();
     }, 100);
     formContainer.classList.toggle('hidden');
+    toggleDisabled();
     return;
   }
   avgDiv.scrollIntoView();
+  toggleDisabled();
   
 
   setTimeout(() => {
@@ -63,6 +68,14 @@ configButton.addEventListener('click', () => {
   }, 100);
   
 });
+
+
+function toggleDisabled(){
+  const inputs = document.querySelectorAll('input');
+  inputs.forEach((input) => {
+    input.disabled = !input.disabled;
+  });
+}
 
 
 // Set timeout to trigger at the start of the next hour
@@ -114,8 +127,8 @@ function checkIfToday(date){
   date = new Date(date.startDate);
   
   const today = new Date();
-  const diff = today.getTimezoneOffset() / 60;
-  date.setHours(date.getHours());
+  const diff = localStorage.getItem('startHour') || 0;
+  date.setHours(date.getHours() - diff);
   return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
 }
 
