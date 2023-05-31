@@ -31,7 +31,13 @@ configForm.addEventListener('submit',(event) => {
   localStorage.setItem('breakPoint1', breakPoint1);
   localStorage.setItem('breakPoint2', breakPoint2);
 
-  formContainer.classList.add('hidden');
+  avgDiv.scrollIntoView();
+
+  setTimeout(() => {
+    formContainer.classList.add('hidden');
+  }, 300);
+
+  
   refreshPrices();
   return false;
 });
@@ -40,9 +46,20 @@ configForm.addEventListener('submit',(event) => {
 
 
 configButton.addEventListener('click', () => {
-  formContainer.classList.toggle('hidden');
+  
+
+  if(formContainer.classList.contains('hidden')){
+    setTimeout(() => {
+      formContainer.scrollIntoView();
+    }, 100);
+    formContainer.classList.toggle('hidden');
+    return;
+  }
+  avgDiv.scrollIntoView();
+  
+
   setTimeout(() => {
-    formContainer.scrollIntoView();
+    formContainer.classList.toggle('hidden');
   }, 100);
   
 });
@@ -70,7 +87,7 @@ function refreshCurrentPrice(){
     const now = new Date();
     const price = getPriceForDate(now, prices['prices']);
     const hoursNow = now.getHours();
-    leftHeader.innerHTML = `<h1>${hoursNow}:00 - ${hoursNow+1}:00 ${price} snt/kWh</h1>`;
+    leftHeader.innerHTML = `<h1 class="h1-left">${hoursNow}:00 - ${hoursNow+1}:00</h1><h1 class="h1-left">${price} snt/kWh</h1>`;
     setColor(leftHeader, price);
   });
 }
@@ -102,7 +119,7 @@ function checkIfToday(date){
   return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
 }
 
-
+/*
 getPrices().then((prices) => {
   const now = new Date();
   const price = getPriceForDate(now, prices['prices']);
@@ -116,6 +133,7 @@ getPrices().then((prices) => {
   buildChart(prices['prices']);
 
 });
+*/
 
 
 function refreshPrices(){
@@ -123,7 +141,7 @@ function refreshPrices(){
     const now = new Date();
     const price = getPriceForDate(now, prices['prices']);
     const hoursNow = now.getHours();
-    leftHeader.innerHTML = `<h1>${hoursNow}:00 - ${hoursNow+1}:00 ${price} snt/kWh</h1>`;
+    leftHeader.innerHTML = `<h1 class="h1-left">${hoursNow}:00 - ${hoursNow+1}:00</h1><h1 class="h1-left">${price} snt/kWh</h1>`;
     setColor(leftHeader, price);
     setSmallest(prices['prices']);
     setAvg(prices['prices']);
@@ -238,3 +256,5 @@ function getPriceForDate(date, prices) {
 
   return matchingPriceEntry.price;
 }
+
+refreshPrices();
