@@ -21,6 +21,7 @@ let stashedPricesTimestamp = null;
 
 let breakPoint1 = localStorage.getItem('breakPoint1') || 5;
 let breakPoint2 = localStorage.getItem('breakPoint2') || 10;
+let startHour = localStorage.getItem('startHour') || 0;
 
 
 configForm.addEventListener('submit',(event) => {
@@ -85,7 +86,7 @@ setTimeout(() => {
   setInterval(() => {
     console.log("Updating prices");
     const now = new Date();
-    if(now.getHours() == 0){
+    if(now.getHours() == 0 || now.getHours() == 14){
       refreshPrices();
     }
     else {
@@ -127,7 +128,7 @@ function checkIfToday(date){
   date = new Date(date.startDate);
   
   const today = new Date();
-  const diff = localStorage.getItem('startHour') || 0;
+  const diff = startHour || 0;
   date.setHours(date.getHours() - diff);
   return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
 }
