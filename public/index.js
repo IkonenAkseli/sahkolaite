@@ -24,6 +24,10 @@ let breakPoint2 = localStorage.getItem('breakPoint2') || 10;
 let startHour = localStorage.getItem('startHour') || 0;
 let chart = null;
 
+document.querySelector('#break-point1').value = breakPoint1 || 5;
+document.querySelector('#break-point2').value = breakPoint2 || 10;
+document.querySelector('#start-hour').value = startHour || 0;
+
 
 configForm.addEventListener('submit',(event) => {
   event.preventDefault(); 
@@ -161,9 +165,7 @@ function refreshPrices(){
     setSmallest(prices['prices']);
     setAvg(prices['prices']);
     setMax(prices['prices']);
-    if(chart){
-      chart.destroy();
-    }
+    if(chart) chart.destroy();
     buildChart(prices['prices']);
   });
 }
