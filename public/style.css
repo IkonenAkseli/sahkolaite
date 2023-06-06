@@ -63,7 +63,9 @@ html {
 }
 
 
-
+.chart-container {
+    max-height: 700px;
+}
 
 
 .green {
