@@ -242,7 +242,7 @@ async function getPrices(){
   if (stashedPricesTimestamp){
     const now = new Date();
     now.setHours(now.getHours() + 12);
-    if (stashedPricesTimestamp < now) {
+    if (stashedPricesTimestamp < now && (stashedPricesTimestamp.getHours() > 13 || now.getHours() < 14)) {
       console.log("Returning stashed prices");
       return stashedPrices;
     }
