@@ -22,6 +22,7 @@ let stashedPricesTimestamp = null;
 let breakPoint1 = localStorage.getItem('breakPoint1') || 5;
 let breakPoint2 = localStorage.getItem('breakPoint2') || 10;
 let startHour = localStorage.getItem('startHour') || 0;
+let chart = null;
 
 
 configForm.addEventListener('submit',(event) => {
@@ -160,6 +161,9 @@ function refreshPrices(){
     setSmallest(prices['prices']);
     setAvg(prices['prices']);
     setMax(prices['prices']);
+    if(chart){
+      chart.destroy();
+    }
     buildChart(prices['prices']);
   });
 }
@@ -188,7 +192,7 @@ function buildChart(prices){
 
 
 
-  new Chart("priceChart", {
+  chart = new Chart("priceChart", {
     type: "bar",
     data: {
       labels: xValues,
@@ -207,7 +211,7 @@ function buildChart(prices){
   });
 
   
-
+  
 
 }
 
