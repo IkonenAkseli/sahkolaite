@@ -204,6 +204,13 @@ function buildChart(prices){
       }]
     },
     options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+          }
+        }]
+      },
       legend: {display: false},
       title: {
         display: true,
@@ -254,6 +261,7 @@ function setAvg(prices){
   avgH1.innerHTML = 'Keskiarvo';
   avgP.innerHTML = `${avg.toFixed(3)} snt/kWh`;
   setColor(avgDiv, avg);
+  setCheapestWindow(prices);
 };
 
 
@@ -264,6 +272,35 @@ function setSmallest(prices){
   smallestP.innerHTML = `${smallest.price} snt/kWh`;
   setColor(smallestDiv, smallest.price);
 };
+
+
+
+async function getCheapestWindow(prices){
+  const pricesToday = await prices.filter(checkIfToday);
+  console.log(pricesToday);
+  let currentSum = null;
+  let startIndex = 0;
+  for(let i = 0; i < pricesToday.length - 2; i++){
+    const sum = pricesToday[i].price + pricesToday[i+1].price + pricesToday[i+2].price;
+    if(currentSum == null || sum < currentSum){
+      currentSum = sum;
+      startIndex = i;
+    }
+    console.log(i);
+  };
+  return startIndex;
+};
+
+
+async function setCheapestWindow(prices){
+  let cheapestWindow = await getCheapestWindow(prices);
+  pricesToday = prices.filter(checkIfToday);
+  
+  console.log(prices[cheapestWindow]);
+  console.log(prices[cheapestWindow+2]);
+  avgH1.innerHTML = `${new Date(pricesToday[cheapestWindow+2].startDate).getHours()}:00 - ${new Date(pricesToday[cheapestWindow].endDate).getHours()}:00`;
+};
+
 
 
 async function getPrices(){
@@ -279,6 +316,7 @@ async function getPrices(){
     
     stashedPrices = response.json();
     stashedPricesTimestamp = new Date();
+    
     return stashedPrices;
   });
 };
