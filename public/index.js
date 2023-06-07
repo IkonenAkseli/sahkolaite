@@ -163,7 +163,7 @@ function refreshPrices(){
     leftHeader.innerHTML = `<h1 class="h1-left">${hoursNow}:00 - ${hoursNow+1}:00</h1><h1 class="h1-left">${price} snt/kWh</h1>`;
     setColor(leftHeader, price);
     setSmallest(prices['prices']);
-    setAvg(prices['prices']);
+    setCheapestWindow(prices['prices']);
     setMax(prices['prices']);
 
     chart ? updateChart(chart, prices['prices']) : buildChart(prices['prices']);
@@ -261,7 +261,6 @@ function setAvg(prices){
   avgH1.innerHTML = 'Keskiarvo';
   avgP.innerHTML = `${avg.toFixed(3)} snt/kWh`;
   setColor(avgDiv, avg);
-  setCheapestWindow(prices);
 };
 
 
@@ -277,7 +276,7 @@ function setSmallest(prices){
 
 async function getCheapestWindow(prices){
   const pricesToday = await prices.filter(checkIfToday);
-  console.log(pricesToday);
+
   let currentSum = null;
   let startIndex = 0;
   for(let i = 0; i < pricesToday.length - 2; i++){
@@ -286,7 +285,6 @@ async function getCheapestWindow(prices){
       currentSum = sum;
       startIndex = i;
     }
-    console.log(i);
   };
   return startIndex;
 };
@@ -295,10 +293,12 @@ async function getCheapestWindow(prices){
 async function setCheapestWindow(prices){
   let cheapestWindow = await getCheapestWindow(prices);
   pricesToday = prices.filter(checkIfToday);
+
+  const windowAvg = (pricesToday[cheapestWindow].price + pricesToday[cheapestWindow+1].price + pricesToday[cheapestWindow+2].price) / 3;
   
-  console.log(prices[cheapestWindow]);
-  console.log(prices[cheapestWindow+2]);
   avgH1.innerHTML = `${new Date(pricesToday[cheapestWindow+2].startDate).getHours()}:00 - ${new Date(pricesToday[cheapestWindow].endDate).getHours()}:00`;
+  avgP.innerHTML = `${windowAvg.toFixed(3)} snt/kWh`;
+  setColor(avgDiv, windowAvg);
 };
 
 
