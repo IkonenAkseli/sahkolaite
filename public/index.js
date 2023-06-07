@@ -109,7 +109,7 @@ function refreshCurrentPrice(){
     leftHeader.innerHTML = `<h1 class="h1-left">${hoursNow}:00 - ${hoursNow+1}:00</h1><h1 class="h1-left">${price} snt/kWh</h1>`;
     setColor(leftHeader, price);
   });
-}
+};
 
 
 function setColor(element, price){
@@ -126,7 +126,7 @@ function setColor(element, price){
   else {
     element.classList.add('green');
   }
-}
+};
 
 
 function checkIfToday(date){
@@ -136,7 +136,7 @@ function checkIfToday(date){
   const diff = startHour || 0;
   date.setHours(date.getHours() - diff);
   return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
-}
+};
 
 /*
 getPrices().then((prices) => {
@@ -165,10 +165,10 @@ function refreshPrices(){
     setSmallest(prices['prices']);
     setAvg(prices['prices']);
     setMax(prices['prices']);
-    if(chart) chart.destroy();
-    buildChart(prices['prices']);
+
+    chart ? updateChart(chart, prices['prices']) : buildChart(prices['prices']);
   });
-}
+};
 
 
 function buildChart(prices){
@@ -212,10 +212,31 @@ function buildChart(prices){
     }
   });
 
-  
-  
-
 }
+
+function updateChart(chart, prices){
+  const xValues = prices.slice(0).reverse().filter(checkIfToday).map((price) => {
+    const date = new Date(price.startDate);
+    return `${date.getHours()}:00`;
+  });
+  const yValues = prices.slice(0).reverse().filter(checkIfToday).map((price) => price.price);
+  const barColors = prices.slice(0).reverse().filter(checkIfToday).map((price) => {
+    if(price.price > breakPoint2){
+      return 'red';
+    }
+    else if(price.price > breakPoint1){
+      return 'yellow';
+    }
+    else {
+      return 'green';
+    }
+  });
+
+  chart.data.labels = xValues;
+  chart.data.datasets[0].data = yValues;
+  chart.data.datasets[0].backgroundColor = barColors;
+  chart.update();
+};
 
 
 function setMax(prices){
@@ -224,7 +245,7 @@ function setMax(prices){
   maxH1.innerHTML = `${new Date(max.startDate).getHours()}:00 - ${new Date(max.endDate).getHours()}:00`;
   maxP.innerHTML = `${max.price} snt/kWh`;
   setColor(maxDiv, max.price);
-}
+};
 
 
 function setAvg(prices){
@@ -233,7 +254,7 @@ function setAvg(prices){
   avgH1.innerHTML = 'Keskiarvo';
   avgP.innerHTML = `${avg.toFixed(3)} snt/kWh`;
   setColor(avgDiv, avg);
-}
+};
 
 
 function setSmallest(prices){
@@ -242,7 +263,7 @@ function setSmallest(prices){
   smallestH1.innerHTML = `${new Date(smallest.startDate).getHours()}:00 - ${new Date(smallest.endDate).getHours()}:00`;
   smallestP.innerHTML = `${smallest.price} snt/kWh`;
   setColor(smallestDiv, smallest.price);
-}
+};
 
 
 async function getPrices(){
@@ -260,7 +281,7 @@ async function getPrices(){
     stashedPricesTimestamp = new Date();
     return stashedPrices;
   });
-}
+};
 
 
 function getPriceForDate(date, prices) {
@@ -275,6 +296,6 @@ function getPriceForDate(date, prices) {
   //console.log(matchingPriceEntry);
 
   return matchingPriceEntry.price;
-}
+};
 
 refreshPrices();
