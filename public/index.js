@@ -138,6 +138,18 @@ function checkIfToday(date){
   return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
 };
 
+function checkForTomorrowPrices(priceObj){
+  
+  const latestPrice = new Date(priceObj.prices[0].startDate);
+  const now = new Date();
+  console.log("checked for tomorrow prices");
+  // +2 instead of +1 for oddities in data
+  if(latestPrice.getDate() === now.getDate() + 2){
+      return true;
+  }
+  return false;
+};
+
 /*
 getPrices().then((prices) => {
   const now = new Date();
@@ -304,19 +316,24 @@ async function setCheapestWindow(prices){
 
 
 async function getPrices(){
-  if (stashedPricesTimestamp){
+  if (stashedPrices && stashedPricesTimestamp){
     const now = new Date();
-    now.setHours(now.getHours() + 12);
-    if (stashedPricesTimestamp < now && (stashedPricesTimestamp.getHours() > 13 || now.getHours() < 14)) {
+    
+    if (now.getHours() < 14 || checkForTomorrowPrices(stashedPrices)) {
       console.log("Returning stashed prices");
       return stashedPrices;
     }
   }
+  const response = await fetch('/api/prices');
+  const prices = await response.json();
+  stashedPrices = prices;
+  stashedPricesTimestamp = new Date();
+  return prices;
   return fetch('/api/prices').then((response) => {
     
     stashedPrices = response.json();
     stashedPricesTimestamp = new Date();
-    
+    console.log(stashedPrices);
     return stashedPrices;
   });
 };
