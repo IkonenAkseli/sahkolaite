@@ -40,16 +40,31 @@ app.listen(port, () => {
 async function getPrices() {
     if (stashedPrices) {
         const now = new Date();
-        now.setHours(now.getHours() + 12);
-        if (stashedPricesTimestamp < now && (stashedPricesTimestamp.getHours() > 13 || now.getHours() < 14)) {
+        now.setHours(now.getHours());
+        console.log(now.getHours());
+        if (now.getHours() < 14 || checkForTomorrowPrices(stashedPrices)) {
             console.log("Returning stashed prices");
             return stashedPrices;
         }
 
     };
+    console.log("Fetching prices");
     const prices = await axios.get('https://api.porssisahko.net/v1/latest-prices.json');
     stashedPrices = prices.data;
     stashedPricesTimestamp = new Date();
     console.log("Stashed prices");
     return prices.data;
+};
+
+function checkForTomorrowPrices(priceObj){
+    console.log("stashed prices", stashedPrices);
+    const latestPrice = new Date(priceObj.prices[0].startDate);
+    const now = new Date();
+
+    console.log(latestPrice.getDate(), now.getDate());
+    // +2 instead of +1 for oddities in data
+    if(latestPrice.getDate() === now.getDate() + 2){
+        return true;
+    }
+    return false;
 };
