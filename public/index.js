@@ -23,6 +23,7 @@ let breakPoint1 = localStorage.getItem('breakPoint1') || 5;
 let breakPoint2 = localStorage.getItem('breakPoint2') || 10;
 let startHour = localStorage.getItem('startHour') || 0;
 let chart = null;
+let udpateAt14Success = false;
 
 document.querySelector('#break-point1').value = breakPoint1 || 5;
 document.querySelector('#break-point2').value = breakPoint2 || 10;
@@ -91,8 +92,14 @@ setTimeout(() => {
   setInterval(() => {
     console.log("Updating prices");
     const now = new Date();
-    if(now.getHours() == 0 || now.getHours() == 14){
+    if(now.getHours() == 3 || now.getHours() == 14){
+      console.log("first if")
       refreshPrices();
+    }
+    else if (now.getHours() == 15 && !udpateAt14Success){
+      console.log("second if");
+      refreshPrices();
+      udpateAt14Success = false;
     }
     else {
       refreshCurrentPrice();
@@ -130,11 +137,25 @@ function setColor(element, price){
 
 
 function checkIfToday(date){
+
+  
   date = new Date(date.startDate);
+
+  console.log(date);
   
   const today = new Date();
   const diff = startHour || 0;
-  date.setHours(date.getHours() - diff);
+  date.setHours(date.getHours() - 1);
+  return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
+};
+
+function checkIfTomorrow(date){
+  date = new Date(date.startDate);
+
+  const today = new Date();
+  const diff = startHour || 0;
+  date.setHours(date.getHours() - 1);
+  date.setDate(date.getDate() - 1);
   return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
 };
 
@@ -167,8 +188,9 @@ getPrices().then((prices) => {
 */
 
 
-function refreshPrices(){
-  getPrices().then((prices) => {
+async function refreshPrices(){
+  udpateAt14Success = await getPrices().then((prices) => {
+    console.log("updating everything")
     const now = new Date();
     const price = getPriceForDate(now, prices['prices']);
     const hoursNow = now.getHours();
@@ -179,6 +201,7 @@ function refreshPrices(){
     setMax(prices['prices']);
 
     chart ? updateChart(chart, prices['prices']) : buildChart(prices['prices']);
+    return checkForTomorrowPrices(prices);
   });
 };
 
@@ -203,7 +226,7 @@ function buildChart(prices){
     }
   });
 
-
+  const yValuesTomorrow = prices.slice(0).reverse().filter(checkIfTomorrow).map((price) => price.price);
 
 
   chart = new Chart("priceChart", {
@@ -212,7 +235,15 @@ function buildChart(prices){
       labels: xValues,
       datasets: [{
         backgroundColor: barColors,
-        data: yValues
+        data: yValues,
+        order: 1,
+      },{
+        backgroundColor: 'blue',
+        borderColor: 'lightblue',
+        data: yValuesTomorrow,
+        type: 'line',
+        fill: false,
+        order: 0,
       }]
     },
     options: {
