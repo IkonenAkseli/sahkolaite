@@ -159,13 +159,18 @@ function checkIfTomorrow(date){
   return date.getDate() == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear();
 };
 
+
 function checkForTomorrowPrices(priceObj){
-  
+  //console.log("stashed prices", stashedPrices);
   const latestPrice = new Date(priceObj.prices[0].startDate);
   const now = new Date();
-  console.log("checked for tomorrow prices");
+
   // +2 instead of +1 for oddities in data
-  if(latestPrice.getDate() === now.getDate() + 2){
+  now.setDate(now.getDate() + 2);
+
+  //console.log(latestPrice.getDate(), now.getDate());
+  
+  if(latestPrice.getDate() === now.getDate()){
       return true;
   }
   return false;
