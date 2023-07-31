@@ -41,7 +41,7 @@ async function getPrices() {
     if (stashedPrices) {
         const now = new Date();
         now.setHours(now.getHours());
-        console.log(now.getHours());
+        //console.log(now.getHours());
         if (now.getHours() < 14 || checkForTomorrowPrices(stashedPrices)) {
             console.log("Returning stashed prices");
             return stashedPrices;

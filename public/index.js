@@ -93,11 +93,11 @@ setTimeout(() => {
     console.log("Updating prices");
     const now = new Date();
     if(now.getHours() == 3 || now.getHours() == 14){
-      console.log("first if")
+      //console.log("first if")
       refreshPrices();
     }
     else if (now.getHours() == 15 && !udpateAt14Success){
-      console.log("second if");
+      //console.log("second if");
       refreshPrices();
       udpateAt14Success = false;
     }
@@ -141,7 +141,7 @@ function checkIfToday(date){
   
   date = new Date(date.startDate);
 
-  console.log(date);
+  //console.log(date);
   
   const today = new Date();
   const diff = startHour || 0;
